@@ -46,7 +46,7 @@ The statistical profiling engine translates complex numerical metrics into human
 ### 📊 Premium Visual Dashboards
 Each module generates a dark-themed, responsive HTML dashboard embedded directly inside Jupyter Notebooks or saved as standalone HTML assets:
 - Model performance leaderboards with metric card visualizations.
-- SHAP explainability matrices and feature importance bar charts.
+- TreeSHAP feature importance plots and feature importance bar charts.
 - Binary classification decision threshold calibration curves.
 - Step-by-step cleaning audit logs and execution timelines.
 - Unsupervised cluster archetype profiles with comparisons to global distributions.
@@ -151,9 +151,9 @@ The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interfa
 - **Semantic Labeling**: Utilizes LLMs (such as Google Gemini) to generate readable topic names, with c-TF-IDF keyword summaries as a deterministic local fallback.
 
 ### 🔮 Clustering Domain (Unsupervised Discovery)
-- **Algorithm Swapping**: Trains and benchmarks MiniBatch K-Means, HDBSCAN, and Agglomerative Clustering simultaneously.
-- **Auto-K Selection**: Sweep parameters from $K=2$ to configured limit using Silhouette, Davies-Bouldin, and Calinski-Harabasz criteria.
-- **Hyperparameter Optimization**: Leverages **Optuna hyperparameter tuning** (via `clustering_tune_trials`) to automatically search for optimal hyperparameters.
+- **Algorithm Swapping**: Trains and benchmarks MiniBatch K-Means, HDBSCAN, Agglomerative, DBSCAN, spectral, and KMeans clustering models simultaneously.
+- **Bayesian Optimization & Custom Objective**: Integrates **Optuna** (via the `clustering_tune_trials` configuration) to sweep UMAP and clustering hyperparameters, maximizing a composite geometric objective: $\text{Score} = \text{Silhouette} + \frac{1}{1 + \text{Davies-Bouldin}} + 0.05 \times \ln(1 + \text{Calinski-Harabasz})$ to find mathematically robust cohort boundaries.
+- **Automated Algorithm & K Sweeping**: Benchmarks multiple cluster counts (from K=2 up to `clustering_max_k`) using Silhouette, Davies-Bouldin, and Calinski-Harabasz validation metrics to automatically identify the optimal cohort configuration when tuning is disabled.
 - **Dimensionality Reduction**: Performs **UMAP/PCA dimensionality reductions** to compress features while retaining topological structure.
 - **Inference Proxies**: Saves a trained K-Nearest-Neighbors model alongside the clustering outputs, allowing real-time cluster assignments for new streaming data points.
 
@@ -288,6 +288,10 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `calibrate_decision_threshold` | `bool` | `False` | Apply threshold optimization on binary tasks |
 | `low_resource_mode` | `str | bool` | `False` | System resource profiling (`"auto"`, `True`, or `False`) |
 | `enable_ai_summary` | `bool` | `True` | Include optional automated AI summary audit inside dashboards |
+| `clustering_tune_trials` | `int \| None` | `None` | Number of Optuna trials to run for Bayesian optimization. `None` disables tuning. |
+| `clustering_max_k` | `int` | `10` | Upper bound for Auto-K optimization sweeps. |
+| `clustering_algorithms` | `List[str]` | `[...]` | Candidate clustering algorithms to evaluate (e.g., `["kmeans", "mbkmeans", "dbscan", "hdbscan", "agglomerative", "spectral"]`). |
+| `clustering_reduction_method` | `str` | `"auto"` | Dimension reduction method prior to clustering (`"pca"`, `"umap"`, or `"auto"`). |
 
 *(For domain-specific schema options, refer to the individual interactive notebooks.)*
 

@@ -173,20 +173,20 @@ The data cleaning pipeline executes a rigid, sequential set of transformations t
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ Step  1: Drop Columns ──→ Remove high-missingness/redundant    │
-│ Step  2: Deduplicate ──→ Enforce row uniqueness (first/last)   │
-│ Step 2b: Leakage Handling ──→ Prune temporal look-ahead cols   │
-│ Step  3: Datetime Conversions ──→ Parse strings to datetime64  │
-│ Step  4: Coercion Cleansing ──→ Force mixed-type to numeric    │
-│ Step 4b: Value Mapping ──→ Replace dirty tokens / null aliases │
-│ Step  5: Text Cleaning ──→ Unicode normalize, strip, lowercase │
-│ Step  6: Imputation ──→ Median/Mode, KNN, or MICE repair       │
-│ Step  7: Cardinality Grouping ──→ Entropy-based rare-label     │
-│ Step  8: Transforms ──→ Log1p, Box-Cox, Yeo-Johnson            │
-│ Step  9: Outlier Treatment ──→ IQR / MAD / Winsorization       │
-│ Step 10: Categorical Association ──→ Prune redundant classes   │
-│ Step 11: Multicollinearity ──→ Spearman ρ pairwise pruning     │
-│ Step 12: Memory Optimization ──→ Downcast dtypes to save RAM   │
+│ Step  1: Drop Columns ──→ Remove high-missingness/redundant     │
+│ Step  2: Deduplicate ──→ Enforce row uniqueness (first/last)    │
+│ Step 2b: Leakage Handling ──→ Prune temporal look-ahead cols    │
+│ Step  3: Datetime Conversions ──→ Parse strings to datetime64   │
+│ Step  4: Coercion Cleansing ──→ Force mixed-type to numeric     │
+│ Step 4b: Value Mapping ──→ Replace dirty tokens / null aliases  │
+│ Step  5: Text Cleaning ──→ Unicode normalize, strip, lowercase  │
+│ Step  6: Imputation ──→ Median/Mode, KNN, or MICE repair        │
+│ Step  7: Cardinality Grouping ──→ Entropy-based rare-label      │
+│ Step  8: Transforms ──→ Log1p, Box-Cox, Yeo-Johnson             │
+│ Step  9: Outlier Treatment ──→ IQR / MAD / Winsorization        │
+│ Step 10: Categorical Association ──→ Prune redundant classes    │
+│ Step 11: Multicollinearity ──→ Spearman ρ pairwise pruning      │
+│ Step 12: Memory Optimization ──→ Downcast dtypes to save RAM    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

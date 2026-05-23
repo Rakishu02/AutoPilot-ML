@@ -275,25 +275,48 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 
 ### AutoMLFactory Schema
 
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `experiment_name` | `str` | `"AutoML_..."` | MLflow experiment tag |
-| `task_type` | `str` | *required* | Routing target: `"tabular"`, `"time_series"`, `"nlp"`, or `"clustering"` |
-| `dataset_path` | `str` | *required* | File path to cleaned CSV dataset |
-| `target_column` | `List[str]` | *required* | Column label(s) containing target values |
-| `presets` | `str` | `"medium"` | Quality preset: `"extreme"` · `"best"` · `"high"` · `"medium"` |
-| `time_limit_seconds` | `int` | `60` | Execution time limit in seconds |
-| `eval_metrics` | `List[str]` | `[]` | Optimization metric arrays |
-| `is_multilabel` | `bool` | `False` | Enable multi-label tabular models |
-| `calibrate_decision_threshold` | `bool` | `False` | Apply threshold optimization on binary tasks |
-| `low_resource_mode` | `str | bool` | `False` | System resource profiling (`"auto"`, `True`, or `False`) |
-| `enable_ai_summary` | `bool` | `True` | Include optional automated AI summary audit inside dashboards |
-| `clustering_tune_trials` | `int \| None` | `None` | Number of Optuna trials to run for Bayesian optimization. `None` disables tuning. |
-| `clustering_max_k` | `int` | `10` | Upper bound for Auto-K optimization sweeps. |
-| `clustering_algorithms` | `List[str]` | `[...]` | Candidate clustering algorithms to evaluate (e.g., `["kmeans", "mbkmeans", "dbscan", "hdbscan", "agglomerative", "spectral"]`). |
-| `clustering_reduction_method` | `str` | `"auto"` | Dimension reduction method prior to clustering (`"pca"`, `"umap"`, or `"auto"`). |
-
-*(For domain-specific schema options, refer to the individual interactive notebooks.)*
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
+| **Core / Shared Parameters** | | | | |
+| `experiment_name` | `str` | MLflow experiment identifier. | Any string | `"Customer_Segmentation"` |
+| `task_type` | `str` | ML task routing. | `"tabular"`, `"nlp"`, `"time_series"`, `"clustering"` | `"tabular"` |
+| `dataset_path` | `str` | Path to training/source CSV dataset. | Any valid path | `"Dataset/train.csv"` |
+| `base_output_dir` | `str` | Centralized artifact output root directory. | Any valid directory path | `"automl_run"` |
+| `prediction_data_path` | `str` | Path to unseen prediction data for batch inference. | Any valid path, `None` | `"Dataset/unseen.csv"` |
+| `target_column` | `List[str]` or `str` | Target column name(s). Always a list for Tabular/Time Series; string for NLP (omit/empty for Unsupervised). | Column name(s) in dataset | `["target"]` |
+| `presets` | `str` | Model quality training preset. | **Tabular/NLP:** `"extreme"`, `"best"`, `"high"`, `"medium"` <br> **Time Series:** `"best"`, `"high"`, `"medium"` | `"medium"` |
+| `time_limit_seconds` | `int` | Maximum training wall-clock time limit allowed in seconds. | Any positive integer | `300` |
+| `fast_dev_run` | `bool` | Quick prototyping mode (subsamples data). | `True`, `False` | `False` |
+| `ai_context` | `str` | Business context string to guide the AI natural language report summary. | Any string, `None` | `"Predicting customer churn based on historical features."` |
+| `calibrate_decision_threshold` | `bool` | Calibrate decision threshold (binary classification only). | `True`, `False` | `False` |
+| `auto_stack` | `bool` | Auto-stack ensemble models for boosted performance. | `True`, `False` | `False` |
+| **Tabular Specific** | | | | |
+| `eval_metrics` | `List[str]` | Optimization metric(s). One per target column. | **Binary/Multiclass:** `"f1_macro"`, `"f1_weighted"`, `"precision_macro"`, `"precision_weighted"`, `"recall_macro"`, `"recall_weighted"`, `"accuracy"` <br> **Regression:** `"mae"`, `"mape"`, `"rmse"`, `"mse"`, `"r2"` | `["f1"]` |
+| `multimodal_mode` | `bool` | Enable image/text routing. | `True`, `False` | `False` |
+| `image_column` | `str` | Column name for image paths. | Any column name in dataset | `"image_path"` |
+| `problem_types` | `List[str]` | Problem type(s) per target. Leave `[]` for auto-inference. | `"binary"`, `"multiclass"`, `"regression"` | `[]` |
+| **NLP Specific** | | | | |
+| `text_column` | `str` | Column containing raw text. | Column name in dataset | `"review_body"` |
+| `candidate_labels` | `List[str]` | Candidate labels for Zero-Shot classification. Only used when `target_column` is empty/omitted. | List of label strings, `None` | `["positive", "negative", "neutral"]` |
+| `nlp_embedding_batch_size` | `int` | Batch size for BGE-M3 embedding extraction (Unsupervised). | Any positive integer | `16` |
+| `nlp_zero_shot_batch_size` | `int` | Batch size for Zero-Shot inference pipeline. | Any positive integer | `8` |
+| **Time Series Specific** | | | | |
+| `item_id_column` | `str` | Column identifying each individual time series. | Column name in dataset | `"store_id"` |
+| `timestamp_column` | `str` | Column containing date/time values. | Column name in dataset | `"date"` |
+| `prediction_length` | `int` | Forecast horizon (number of steps into the future). | Any positive integer | `14` |
+| `freq` | `str` | Pandas frequency string. Auto-detected if `None`. | `"D"`, `"H"`, `"W"`, etc. | `"D"` |
+| `generate_covariates` | `bool` | Auto-generate `is_weekend` and `is_holiday` covariates. | `True`, `False` | `True` |
+| `quantile_levels` | `List[float]` | Quantile levels for probabilistic forecasting. | `[0.05, 0.5, 0.95]`, etc. | `[0.05, 0.5, 0.95]` |
+| `static_features_path` | `str` | Path to CSV with item-level metadata. | Any valid path, `None` | `"Dataset/static.csv"` |
+| `eval_metric` | `str` | Time Series evaluation metric. | `"MSE"`, `"RMSE"`, `"MAPE"`, `"MAE"`, `"WQL"` | `"RMSE"` |
+| **Clustering Specific** | | | | |
+| `n_clusters` | `int` | Fixed number of clusters (K). `None` enables Auto-K sweep. | Any positive integer, `None` | `None` |
+| `features` | `List[str]` | Explicit columns for clustering; empty list uses all numeric columns. | List of column names, `[]` | `[]` |
+| `exclude_features` | `List[str]` | Columns to explicitly ignore or exclude from clustering. | List of column names, `[]` | `["customer_id"]` |
+| `clustering_max_k` | `int` | Upper bound for Auto-K optimization sweeps. | Any positive integer | `10` |
+| `clustering_algorithms` | `List[str]` | List of candidate clustering algorithms to evaluate. | `"kmeans"`, `"mbkmeans"`, `"dbscan"`, `"hdbscan"`, `"agglomerative"`, `"spectral"` | `["mbkmeans", "hdbscan", "agglomerative"]` |
+| `clustering_reduction_method` | `str` | Dimension reduction method prior to clustering. | `"pca"`, `"umap"`, `"auto"` | `"auto"` |
+| `clustering_tune_trials` | `int` | Number of Optuna trials to run. `None` disables tuning. | Any positive integer, `None` | `None` |
 
 ---
 

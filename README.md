@@ -214,36 +214,7 @@ The web scraping system manages async, isolated data ingestion pipelines:
 
 ---
 
-## ⚡ Getting Started & Tutorial Showcase
-
-To explore AutoPilot-ML, set up a virtual environment and launch the public Jupyter Notebook tutorials. These notebooks serve as the execution interface to demonstrate the underlying data engines.
-
-### 1. Installation
-
-```bash
-# Clone the repository and navigate to the directory
-cd AutoPilot-ML
-
-# Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate      # Linux/Mac
-venv\Scripts\activate         # Windows
-
-# Install the required packages
-pip install -r requirements.txt
-```
-
-### 2. Launch the Showcase Jupyter Workspace
-
-```bash
-jupyter notebook
-```
-
-Open any of the tutorial notebooks (e.g., `ml_tabular.ipynb` or `data_cleaner.ipynb`) to step through interactive pipelines and generate visual dashboards.
-
----
-
-## 📖 API Workflow Guide
+## 📖 Tutorial Showcase
 
 The following snippets illustrate how external developers interact with the AutoPilot-ML system through the provided interface wrapper APIs.
 

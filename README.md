@@ -2,7 +2,7 @@
   <h1 align="center">🚀 AutoPilot-ML</h1>
   <p align="center">
     <strong>Production-Grade Automated Data Science & MLOps Engine</strong><br/>
-    <em>Proprietary, enterprise-grade automated modeling and pipeline suite with interactive tutorial showcases.</em>
+    <em>Proprietary, enterprise-grade automated modeling and pipeline suite with interactive dashboard.</em>
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.9+">
@@ -25,7 +25,7 @@ The public interface is showcased through interactive Jupyter Notebooks, demonst
 
 | User Role | Ecosystem Deliverables |
 |---|---|
-| **🔬 Data Scientist** | Unified AutoML execution with Optuna hyperparameter tuning, SHAP explainability matrices, and MLflow experiment tracking across 4 machine learning domains. |
+| **🔬 Data Scientist** | Unified AutoML execution with SHAP explainability matrices, Optuna-tuned clustering models, and MLflow experiment tracking across 4 machine learning domains. |
 | **📊 Business Analyst** | Interactive HTML dashboards, auto-generated Entity-Relationship diagrams, and plain-language data quality action plans. |
 | **🤖 ML Engineer** | Deterministic, reproducible pipelines with memory-safe O(1) sampling, hardware-aware resource allocation, and exportable model artifacts. |
 
@@ -46,7 +46,7 @@ The statistical profiling engine translates complex numerical metrics into human
 ### 📊 Premium Visual Dashboards
 Each module generates a dark-themed, responsive HTML dashboard embedded directly inside Jupyter Notebooks or saved as standalone HTML assets:
 - Model performance leaderboards with metric card visualizations.
-- SHAP explainability matrices and feature importance heatmaps.
+- SHAP explainability matrices and feature importance bar charts.
 - Binary classification decision threshold calibration curves.
 - Step-by-step cleaning audit logs and execution timelines.
 - Unsupervised cluster archetype profiles with comparisons to global distributions.
@@ -134,8 +134,7 @@ The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interfa
 ### 📋 Tabular Domain (Classification / Regression / Multi-Label)
 *Powered by the **AutoGluon v1.5 infrastructure**, with model presets ranging from `medium` to `extreme`.*
 - **Ensembled Prototyping**: Automates multi-model training, stacked ensembling, and foundation models (e.g., TabPFN, TabICL) on the highest presets.
-- **Class Imbalance Correction**: Integrates synthetic over-sampling techniques (SMOTE) and cost-sensitive objective functions to handle highly imbalanced datasets.
-- **Hyperparameter Optimization**: Runs Optuna hyperparameter tuning to find optimal model weights.
+- **Class Imbalance Handling**: Integrates cost-sensitive objective functions and weighted training parameters to optimize classification on highly imbalanced targets.
 - **SHAP Explainability**: Generates SHAP explainability matrices and feature importance rankings with automated sampling controls.
 - **Threshold Calibration**: Calibrates decision thresholds on binary targets to optimize for specific MLOps targets (F1, precision, or recall).
 
@@ -146,7 +145,7 @@ The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interfa
 - **Temporal Alignment**: Automatic frequency inference and backtesting walk-forward validation splits.
 
 ### 💬 NLP Domain (Supervised, Zero-Shot, & Unsupervised Modes)
-- **Supervised Classification**: Deep learning models optimized for text classification.
+- **Supervised Classification**: Powered by **AutoGluon Tabular** text-feature processing to train classification models on labeled text datasets (e.g. sentiment, intent).
 - **Zero-Shot Routing**: Uses DeBERTa models to route text records to dynamic candidate classes without labeled training data, auto-accepting high-confidence labels and flagging low-confidence rows.
 - **Unsupervised Topic Discovery**: Integrates **BERTopic NLP architectures** using dense BGE-M3 text embeddings.
 - **Semantic Labeling**: Utilizes LLMs (such as Google Gemini) to generate readable topic names, with c-TF-IDF keyword summaries as a deterministic local fallback.
@@ -154,6 +153,7 @@ The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interfa
 ### 🔮 Clustering Domain (Unsupervised Discovery)
 - **Algorithm Swapping**: Trains and benchmarks MiniBatch K-Means, HDBSCAN, and Agglomerative Clustering simultaneously.
 - **Auto-K Selection**: Sweep parameters from $K=2$ to configured limit using Silhouette, Davies-Bouldin, and Calinski-Harabasz criteria.
+- **Hyperparameter Optimization**: Leverages **Optuna hyperparameter tuning** (via `clustering_tune_trials`) to automatically search for optimal hyperparameters.
 - **Dimensionality Reduction**: Performs **UMAP/PCA dimensionality reductions** to compress features while retaining topological structure.
 - **Inference Proxies**: Saves a trained K-Nearest-Neighbors model alongside the clustering outputs, allowing real-time cluster assignments for new streaming data points.
 
@@ -192,6 +192,10 @@ The data cleaning pipeline executes a rigid, sequential set of transformations t
 │ Step 12: Memory Optimization ──→ Downcast dtypes to save RAM    │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+### Class Imbalance & Imputation Controls
+- **Class Imbalance Resampling**: Integrates **SMOTE** (Synthetic Minority Over-sampling Technique) to automatically balance skewed class distributions during the preprocessing stage.
+- **Multivariate Imputation**: Employs **KNN Imputation** and **MICE** (Multiple Imputation by Chained Equations) to repair complex missingness patterns.
 
 ### Advanced Imputation Modes
 

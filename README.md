@@ -99,13 +99,13 @@ The primary entry points for exploring the capabilities of the system are the in
 
 | Interactive Notebook | Direct Render | Showcase Domain | Target Operations |
 |---|---|---|---|
-| [`data_scraper.ipynb`](data_scraper.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_scraper.ipynb) | Data Ingestion | Stealth async web scraping and subprocess isolation. |
-| [`data_profiler.ipynb`](data_profiler.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_profiler.ipynb) | Statistical Profiling | Semantic type detection, quality score calculations, and ERD generation. |
-| [`data_cleaner.ipynb`](data_cleaner.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_cleaner.ipynb) | Deterministic Cleaning | 12-step sequential data repair, outlier treatment, and imputation. |
-| [`ml_tabular.ipynb`](ml_tabular.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_tabular.ipynb) | Tabular AutoML | Supervised classification, regression, multi-label models, and SHAP explainability. |
-| [`ml_nlp.ipynb`](ml_nlp.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_nlp.ipynb) | NLP Engines | Supervised intent classification, zero-shot routing, and unsupervised topic discovery. |
-| [`ml_timeseries.ipynb`](ml_timeseries.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_timeseries.ipynb) | Time Series Forecasting | Multi-item forecasting, quantile uncertainty bounds, and automated covariate enrichment. |
-| [`ml_clustering.ipynb`](ml_clustering.ipynb) | [⚡ nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_clustering.ipynb) | Unsupervised Discovery | MiniBatch K-Means, HDBSCAN, UMAP/PCA dimensionality reductions, and archetype profiling. |
+| [`data_scraper.ipynb`](data_scraper.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_scraper.ipynb) | Data Ingestion | Stealth async web scraping and subprocess isolation. |
+| [`data_profiler.ipynb`](data_profiler.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_profiler.ipynb) | Statistical Profiling | Semantic type detection, quality score calculations, and ERD generation. |
+| [`data_cleaner.ipynb`](data_cleaner.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_cleaner.ipynb) | Deterministic Cleaning | 12-step sequential data repair, outlier treatment, and imputation. |
+| [`ml_tabular.ipynb`](ml_tabular.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_tabular.ipynb) | Tabular AutoML | Supervised classification, regression, multi-label models, and SHAP explainability. |
+| [`ml_nlp.ipynb`](ml_nlp.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_nlp.ipynb) | NLP Engines | Supervised intent classification, zero-shot routing, and unsupervised topic discovery. |
+| [`ml_timeseries.ipynb`](ml_timeseries.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_timeseries.ipynb) | Time Series Forecasting | Multi-item forecasting, quantile uncertainty bounds, and automated covariate enrichment. |
+| [`ml_clustering.ipynb`](ml_clustering.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_clustering.ipynb) | Unsupervised Discovery | MiniBatch K-Means, HDBSCAN, UMAP/PCA dimensionality reductions, and archetype profiling. |
 
 ### Output Artifact Structure
 

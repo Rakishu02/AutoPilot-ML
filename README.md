@@ -281,20 +281,20 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `experiment_name` | `str` | MLflow experiment identifier. | Any string | `"Customer_Segmentation"` |
 | `task_type` | `str` | ML task routing. | `"tabular"`, `"nlp"`, `"time_series"`, `"clustering"` | `"tabular"` |
 | `dataset_path` | `str` | Path to training/source CSV dataset. | Any valid path | `"Dataset/train.csv"` |
-| `base_output_dir` | `str` | Centralized artifact output root directory. | Any valid directory path | `"automl_run"` |
-| `prediction_data_path` | `str` | Path to unseen prediction data for batch inference. | Any valid path, `None` | `"Dataset/unseen.csv"` |
 | `target_column` | `List[str]` or `str` | Target column name(s). Always a list for Tabular/Time Series; string for NLP (omit/empty for Unsupervised). | Column name(s) in dataset | `["target"]` |
 | `presets` | `str` | Model quality training preset. | **Tabular/NLP:** `"extreme"`, `"best"`, `"high"`, `"medium"` <br> **Time Series:** `"best"`, `"high"`, `"medium"` | `"medium"` |
 | `time_limit_seconds` | `int` | Maximum training wall-clock time limit allowed in seconds. | Any positive integer | `300` |
+| `auto_stack` | `bool` | Auto-stack ensemble models for boosted performance. | `True`, `False` | `False` |
+| `calibrate_decision_threshold` | `bool` | Calibrate decision threshold (binary classification only). | `True`, `False` | `False` |
+| `base_output_dir` | `str` | Centralized artifact output root directory. | Any valid directory path | `"automl_run"` |
+| `prediction_data_path` | `str` | Path to unseen prediction data for batch inference. | Any valid path, `None` | `"Dataset/unseen.csv"` |
 | `fast_dev_run` | `bool` | Quick prototyping mode (subsamples data). | `True`, `False` | `False` |
 | `ai_context` | `str` | Business context string to guide the AI natural language report summary. | Any string, `None` | `"Predicting customer churn based on historical features."` |
-| `calibrate_decision_threshold` | `bool` | Calibrate decision threshold (binary classification only). | `True`, `False` | `False` |
-| `auto_stack` | `bool` | Auto-stack ensemble models for boosted performance. | `True`, `False` | `False` |
 | **Tabular Specific** | | | | |
+| `problem_types` | `List[str]` | Problem type(s) per target. Leave `[]` for auto-inference. | `"binary"`, `"multiclass"`, `"regression"` | `[]` |
 | `eval_metrics` | `List[str]` | Optimization metric(s). One per target column. | **Binary/Multiclass:** `"f1_macro"`, `"f1_weighted"`, `"precision_macro"`, `"precision_weighted"`, `"recall_macro"`, `"recall_weighted"`, `"accuracy"` <br> **Regression:** `"mae"`, `"mape"`, `"rmse"`, `"mse"`, `"r2"` | `["f1"]` |
 | `multimodal_mode` | `bool` | Enable image/text routing. | `True`, `False` | `False` |
 | `image_column` | `str` | Column name for image paths. | Any column name in dataset | `"image_path"` |
-| `problem_types` | `List[str]` | Problem type(s) per target. Leave `[]` for auto-inference. | `"binary"`, `"multiclass"`, `"regression"` | `[]` |
 | **NLP Specific** | | | | |
 | `text_column` | `str` | Column containing raw text. | Column name in dataset | `"review_body"` |
 | `candidate_labels` | `List[str]` | Candidate labels for Zero-Shot classification. Only used when `target_column` is empty/omitted. | List of label strings, `None` | `["positive", "negative", "neutral"]` |
@@ -310,9 +310,9 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `static_features_path` | `str` | Path to CSV with item-level metadata. | Any valid path, `None` | `"Dataset/static.csv"` |
 | `eval_metric` | `str` | Time Series evaluation metric. | `"MSE"`, `"RMSE"`, `"MAPE"`, `"MAE"`, `"WQL"` | `"RMSE"` |
 | **Clustering Specific** | | | | |
-| `n_clusters` | `int` | Fixed number of clusters (K). `None` enables Auto-K sweep. | Any positive integer, `None` | `None` |
 | `features` | `List[str]` | Explicit columns for clustering; empty list uses all numeric columns. | List of column names, `[]` | `[]` |
 | `exclude_features` | `List[str]` | Columns to explicitly ignore or exclude from clustering. | List of column names, `[]` | `["customer_id"]` |
+| `n_clusters` | `int` | Fixed number of clusters (K). `None` enables Auto-K sweep. | Any positive integer, `None` | `None` |
 | `clustering_max_k` | `int` | Upper bound for Auto-K optimization sweeps. | Any positive integer | `10` |
 | `clustering_algorithms` | `List[str]` | List of candidate clustering algorithms to evaluate. | `"kmeans"`, `"mbkmeans"`, `"dbscan"`, `"hdbscan"`, `"agglomerative"`, `"spectral"` | `["mbkmeans", "hdbscan", "agglomerative"]` |
 | `clustering_reduction_method` | `str` | Dimension reduction method prior to clustering. | `"pca"`, `"umap"`, `"auto"` | `"auto"` |

@@ -213,11 +213,23 @@ If the data footprint exceeds hardware bounds, advanced imputers automatically d
 
 ## 🕷️ The Data Scraper — Async & Stealth Ingestion
 
-The web scraping system manages async, isolated data ingestion pipelines:
-- **Subprocess Isolation**: Spawns async scrape sessions outside the primary event loop to avoid Tornado crashes in Jupyter environments.
-- **Stealth Evasion**: Uses anti-bot bypass mechanisms to evade simple web scrapers blocks (dynamic user agents, header shuffling).
-- **Rate-Limiting Controls**: Configurable request timeouts, request delays (jitter ranges), and retries.
-- **Incremental Checkpointing**: Regularly commits scraped rows to disk to ensure progress is saved if interrupted.
+The web scraping system manages async, isolated data ingestion pipelines using a **Dual-Mode Engine Architecture**:
+
+### 🤖 Google Play Reviews Scraper
+- **Anti-Blocking System**: Smart connection handling that automatically retries if the app store temporarily limits requests, ensuring data collection is never interrupted by network issues.
+- **Human-like Scraping Behavior**: Automatically adds natural, varied pauses between requests to mimic human browsing behavior, preventing the scraper from being flagged or blocked.
+- **Unrestricted Data Ingestion**: Able to gather all available feedback without limits, allowing the business to capture a complete picture of customer reviews.
+- **Clean Date and Text Formatting**: Automatically cleans up line breaks and messy timestamps into structured, readable tables. This ensures the exportedS files open perfectly in standard software (like Excel) and are ready for immediate team use.
+
+### 🕷️ General HTML Website Scraper
+- **Crash-Free Background Isolation**: Runs web scraping tasks in the background without affecting or crashing the main application window.
+- **Smart Bot Bypass**: Automatically navigates websites with modern security walls and check-in challenges without manual effort.
+- **Targeted Data Extraction**: Easily locates and pulls specific text fields, lists, and images from different layouts on any target website.
+
+### Shared Pipeline Safety
+- **Auto-Saving Safety Checkpoints**: Saves scraped data continuously during the run. If the computer loses power or the process is stopped midway, no data is lost.
+- **Data Format Consistency**: Ensures complex data lists are preserved in their correct structures without corruption.
+- **Real-Time Progress Dashboard**: Provides a beautiful visual tracking dashboard that displays status updates, logs, and a clean live preview of the gathered data.
 
 
 ---

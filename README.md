@@ -78,9 +78,9 @@ The execution steps feed into one another sequentially, though each module can b
 🕷️ Scrape  ──→  🔍 Profile  ──→  🧹 Clean  ──→  🤖 Model
      │               │               │              │
      ▼               ▼               ▼              ▼
-  Raw HTML       Quality Report   ML-Ready Data   Trained Models
-  → CSV/JSONL    → Action Plan    → Cleaned CSV   → Predictions
-                 → Mermaid ERD                     → HTML Dashboard
+  Raw HTML /     Quality Report   ML-Ready Data   Trained Models
+  Google Play    → Action Plan    → Cleaned CSV   → Predictions
+  → CSV/JSONL    → Mermaid ERD                     → HTML Dashboard
                  → LLM Context                     → MLflow Artifacts
 ```
 
@@ -103,9 +103,9 @@ The primary entry points for exploring the capabilities of the system are the in
 | [`data_profiler.ipynb`](data_profiler.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_profiler.ipynb) | Statistical Profiling | Semantic type detection, quality score calculations, and ERD generation. |
 | [`data_cleaner.ipynb`](data_cleaner.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/data_cleaner.ipynb) | Deterministic Cleaning | 12-step sequential data repair, outlier treatment, and imputation. |
 | [`ml_tabular.ipynb`](ml_tabular.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_tabular.ipynb) | Tabular AutoML | Supervised classification, regression, multi-label models, and SHAP explainability. |
-| [`ml_nlp.ipynb`](ml_nlp.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_nlp.ipynb) | NLP Engines | Supervised intent classification, zero-shot routing, and unsupervised topic discovery. |
 | [`ml_timeseries.ipynb`](ml_timeseries.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_timeseries.ipynb) | Time Series Forecasting | Multi-item forecasting, quantile uncertainty bounds, and automated covariate enrichment. |
 | [`ml_clustering.ipynb`](ml_clustering.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_clustering.ipynb) | Unsupervised Discovery | MiniBatch K-Means, HDBSCAN, UMAP/PCA dimensionality reductions, and archetype profiling. |
+| [`ml_nlp.ipynb`](ml_nlp.ipynb) | [⚡nbviewer](https://nbviewer.org/github/Rakishu02/AutoPilot-ML/blob/main/ml_nlp.ipynb) | NLP Engines | Supervised intent classification, zero-shot routing, and unsupervised topic discovery. |
 
 ### Output Artifact Structure
 
@@ -127,35 +127,25 @@ When the pipeline runs, it generates structured artifact directories within the 
 
 ---
 
-## 🤖 The ML Engine — Multi-Domain Modeling Suite
+## 🕷️ The Data Scraper — Async & Stealth Ingestion
 
-The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interface. It routes execution to one of four ML domains based on the configuration:
+The web scraping system manages async, isolated data ingestion pipelines using a **Dual-Mode Engine Architecture**:
 
-### 📋 Tabular Domain (Classification / Regression / Multi-Label)
-*Powered by the **AutoGluon v1.5 infrastructure**, with model presets ranging from `medium` to `extreme`.*
-- **Ensembled Prototyping**: Automates multi-model training, stacked ensembling, and foundation models (e.g., TabPFN, TabICL) on the highest presets.
-- **Class Imbalance Handling**: Integrates cost-sensitive objective functions and weighted training parameters to optimize classification on highly imbalanced targets.
-- **SHAP Explainability**: Generates SHAP explainability matrices and feature importance rankings with automated sampling controls.
-- **Threshold Calibration**: Calibrates decision thresholds on binary targets to optimize for specific MLOps targets (F1, precision, or recall).
+### 🤖 Google Play Reviews Scraper
+- **Anti-Blocking System**: Smart connection handling that automatically retries if the app store temporarily limits requests, ensuring data collection is never interrupted by network issues.
+- **Human-like Scraping Behavior**: Automatically adds natural, varied pauses between requests to mimic human browsing behavior, preventing the scraper from being flagged or blocked.
+- **Unrestricted Data Ingestion**: Able to gather all available feedback without limits, allowing the business to capture a complete picture of customer reviews.
+- **Clean Date and Text Formatting**: Automatically cleans up line breaks and messy timestamps into structured, readable tables. This ensures the exportedS files open perfectly in standard software (like Excel) and are ready for immediate team use.
 
-### 📈 Time Series Domain (Probabilistic Forecasting)
-- **Multi-Item Optimization**: Handles parallel forecasting for thousands of time-series items with static features.
-- **Quantile Forecasting**: Generates uncertainty-aware predictions (e.g., quantiles `[0.05, 0.5, 0.95]`).
-- **Automated Covariates**: Enriches inputs with localized country holiday calendars and temporal indicators (e.g., `is_weekend`).
-- **Temporal Alignment**: Automatic frequency inference and backtesting walk-forward validation splits.
+### 🕷️ General HTML Website Scraper
+- **Crash-Free Background Isolation**: Runs web scraping tasks in the background without affecting or crashing the main application window.
+- **Smart Bot Bypass**: Automatically navigates websites with modern security walls and check-in challenges without manual effort.
+- **Targeted Data Extraction**: Easily locates and pulls specific text fields, lists, and images from different layouts on any target website.
 
-### 💬 NLP Domain (Supervised, Zero-Shot, & Unsupervised Modes)
-- **Supervised Classification**: Powered by **AutoGluon Tabular** text-feature processing to train classification models on labeled text datasets (e.g. sentiment, intent).
-- **Zero-Shot Routing**: Uses DeBERTa models to route text records to dynamic candidate classes without labeled training data, auto-accepting high-confidence labels and flagging low-confidence rows.
-- **Unsupervised Topic Discovery**: Integrates **BERTopic NLP architectures** using dense BGE-M3 text embeddings.
-- **Semantic Labeling**: Utilizes LLMs (such as Google Gemini) to generate readable topic names, with c-TF-IDF keyword summaries as a deterministic local fallback.
-
-### 🔮 Clustering Domain (Unsupervised Discovery)
-- **Algorithm Swapping**: Trains and benchmarks MiniBatch K-Means, HDBSCAN, Agglomerative, DBSCAN, spectral, and KMeans clustering models simultaneously.
-- **Bayesian Optimization & Custom Objective**: Integrates **Optuna** (via the `clustering_tune_trials` configuration) to sweep UMAP and clustering hyperparameters, maximizing a composite geometric objective: $\text{Score} = \text{Silhouette} + \frac{1}{1 + \text{Davies-Bouldin}} + 0.05 \times \ln(1 + \text{Calinski-Harabasz})$ to find mathematically robust cohort boundaries.
-- **Automated Algorithm & K Sweeping**: Benchmarks multiple cluster counts (from K=2 up to `clustering_max_k`) using Silhouette, Davies-Bouldin, and Calinski-Harabasz validation metrics to automatically identify the optimal cohort configuration when tuning is disabled.
-- **Dimensionality Reduction**: Performs **UMAP/PCA dimensionality reductions** to compress features while retaining topological structure.
-- **Inference Proxies**: Saves a trained K-Nearest-Neighbors model alongside the clustering outputs, allowing real-time cluster assignments for new streaming data points.
+### Shared Pipeline Safety
+- **Auto-Saving Safety Checkpoints**: Saves scraped data continuously during the run. If the computer loses power or the process is stopped midway, no data is lost.
+- **Data Format Consistency**: Ensures complex data lists are preserved in their correct structures without corruption.
+- **Real-Time Progress Dashboard**: Provides a beautiful visual tracking dashboard that displays status updates, logs, and a clean live preview of the gathered data.
 
 ---
 
@@ -211,25 +201,35 @@ If the data footprint exceeds hardware bounds, advanced imputers automatically d
 
 ---
 
-## 🕷️ The Data Scraper — Async & Stealth Ingestion
+## 🤖 The ML Engine — Multi-Domain Modeling Suite
 
-The web scraping system manages async, isolated data ingestion pipelines using a **Dual-Mode Engine Architecture**:
+The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interface. It routes execution to one of four ML domains based on the configuration:
 
-### 🤖 Google Play Reviews Scraper
-- **Anti-Blocking System**: Smart connection handling that automatically retries if the app store temporarily limits requests, ensuring data collection is never interrupted by network issues.
-- **Human-like Scraping Behavior**: Automatically adds natural, varied pauses between requests to mimic human browsing behavior, preventing the scraper from being flagged or blocked.
-- **Unrestricted Data Ingestion**: Able to gather all available feedback without limits, allowing the business to capture a complete picture of customer reviews.
-- **Clean Date and Text Formatting**: Automatically cleans up line breaks and messy timestamps into structured, readable tables. This ensures the exportedS files open perfectly in standard software (like Excel) and are ready for immediate team use.
+### 📋 Tabular Domain (Classification / Regression / Multi-Label)
+*Powered by the **AutoGluon v1.5 infrastructure**, with model presets ranging from `medium` to `extreme`.*
+- **Ensembled Prototyping**: Automates multi-model training, stacked ensembling, and foundation models (e.g., TabPFN, TabICL) on the highest presets.
+- **Class Imbalance Handling**: Integrates cost-sensitive objective functions and weighted training parameters to optimize classification on highly imbalanced targets.
+- **SHAP Explainability**: Generates SHAP explainability matrices and feature importance rankings with automated sampling controls.
+- **Threshold Calibration**: Calibrates decision thresholds on binary targets to optimize for specific MLOps targets (F1, precision, or recall).
 
-### 🕷️ General HTML Website Scraper
-- **Crash-Free Background Isolation**: Runs web scraping tasks in the background without affecting or crashing the main application window.
-- **Smart Bot Bypass**: Automatically navigates websites with modern security walls and check-in challenges without manual effort.
-- **Targeted Data Extraction**: Easily locates and pulls specific text fields, lists, and images from different layouts on any target website.
+### 📈 Time Series Domain (Probabilistic Forecasting)
+- **Multi-Item Optimization**: Handles parallel forecasting for thousands of time-series items with static features.
+- **Quantile Forecasting**: Generates uncertainty-aware predictions (e.g., quantiles `[0.05, 0.5, 0.95]`).
+- **Automated Covariates**: Enriches inputs with localized country holiday calendars and temporal indicators (e.g., `is_weekend`).
+- **Temporal Alignment**: Automatic frequency inference and backtesting walk-forward validation splits.
 
-### Shared Pipeline Safety
-- **Auto-Saving Safety Checkpoints**: Saves scraped data continuously during the run. If the computer loses power or the process is stopped midway, no data is lost.
-- **Data Format Consistency**: Ensures complex data lists are preserved in their correct structures without corruption.
-- **Real-Time Progress Dashboard**: Provides a beautiful visual tracking dashboard that displays status updates, logs, and a clean live preview of the gathered data.
+### 🔮 Clustering Domain (Unsupervised Discovery)
+- **Algorithm Swapping**: Trains and benchmarks MiniBatch K-Means, HDBSCAN, Agglomerative, DBSCAN, spectral, and KMeans clustering models simultaneously.
+- **Bayesian Optimization & Custom Objective**: Integrates **Optuna** (via the `clustering_tune_trials` configuration) to sweep UMAP and clustering hyperparameters, maximizing a composite geometric objective: $\text{Score} = \text{Silhouette} + \frac{1}{1 + \text{Davies-Bouldin}} + 0.05 \times \ln(1 + \text{Calinski-Harabasz})$ to find mathematically robust cohort boundaries.
+- **Automated Algorithm & K Sweeping**: Benchmarks multiple cluster counts (from K=2 up to `clustering_max_k`) using Silhouette, Davies-Bouldin, and Calinski-Harabasz validation metrics to automatically identify the optimal cohort configuration when tuning is disabled.
+- **Dimensionality Reduction**: Performs **UMAP/PCA dimensionality reductions** to compress features while retaining topological structure.
+- **Inference Proxies**: Saves a trained K-Nearest-Neighbors model alongside the clustering outputs, allowing real-time cluster assignments for new streaming data points.
+
+### 💬 NLP Domain (Supervised, Zero-Shot, & Unsupervised Modes)
+- **Supervised Classification**: Powered by **AutoGluon Tabular** text-feature processing to train classification models on labeled text datasets (e.g. sentiment, intent).
+- **Zero-Shot Routing**: Uses DeBERTa models to route text records to dynamic candidate classes without labeled training data, auto-accepting high-confidence labels and flagging low-confidence rows.
+- **Unsupervised Topic Discovery**: Integrates **BERTopic NLP architectures** using dense BGE-M3 text embeddings.
+- **Semantic Labeling**: Utilizes LLMs (such as Google Gemini) to generate readable topic names, with c-TF-IDF keyword summaries as a deterministic local fallback.
 
 
 ---
@@ -261,13 +261,13 @@ The public repository exposes the interactive tutorial notebooks that consume th
 📦 AutoPilot-ML
 │
 │── Interactive Notebook Showcase ──────────────────────────────────
-├── ml_tabular.ipynb              📓 Tabular classification, regression, and threshold optimization
-├── ml_nlp.ipynb                  📓 Supervised NLP, zero-shot routing, and unsupervised BERTopic
-├── ml_clustering.ipynb           📓 Unsupervised clustering, UMAP/PCA, and archetype profiling
-├── ml_timeseries.ipynb           📓 Probabilistic time-series forecasting & covariates
 ├── data_scraper.ipynb            📓 Async stealth web scraping & pipeline wrappers
-├── data_cleaner.ipynb            📓 Deterministic 12-step cleaning pipeline and imputer options
 ├── data_profiler.ipynb           📓 Statistical data profiling, ERD output, & LLM context
+├── data_cleaner.ipynb            📓 Deterministic 12-step cleaning pipeline and imputer options
+├── ml_tabular.ipynb              📓 Tabular classification, regression, and threshold optimization
+├── ml_timeseries.ipynb           📓 Probabilistic time-series forecasting & covariates
+├── ml_clustering.ipynb           📓 Unsupervised clustering, UMAP/PCA, and archetype profiling
+├── ml_nlp.ipynb                  📓 Supervised NLP, zero-shot routing, and unsupervised BERTopic
 │
 │── Project Documentation ──────────────────────────────────────────
 ├── README.md                     📄 Showcase documentation & system reference

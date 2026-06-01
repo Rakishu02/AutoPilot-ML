@@ -283,16 +283,80 @@ The public repository exposes the interactive tutorial notebooks that consume th
 
 The system configuration is managed via runtime config dictionaries. To make the documentation clean and prevent info overload, click the sections below to expand the specific configuration parameters for each domain:
 
-<details open>
-<summary><strong>⚙️ Core / Shared Parameters (Common to all tasks)</strong></summary>
+<details>
+<summary><strong>🕷️ Data Scraper Settings</strong></summary>
 <br>
+
+| Group | Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|:---|
+| **Global** | `scraper_type` | `str` | Orchestrator mode routing key. | `"google_play"`, `"html"` | `"google_play"` |
+| **Global** | `output_filename` | `str` | Base path/filename on disk (no extension). | Any valid path stem | `"Exports/reviews_data"` |
+| **Global** | `export_format` | `str` | Consolidated file export format. | `"csv"`, `"jsonl"`, `"excel"` | `"csv"` |
+| **Google Play** | `app_id` | `str` | Play Store App Package Identifier. | Play Store URL `id=` param | `"com.whatsapp"` |
+| **Google Play** | `lang` | `str` | Review language target filter. | `"en"`, `"id"`, etc. | `"en"` |
+| **Google Play** | `country` | `str` | Store region target filter. | `"us"`, `"id"`, etc. | `"us"` |
+| **Google Play** | `sort` | `str` | Search results sorting ordering. | `"newest"`, `"most_relevant"` | `"newest"` |
+| **Google Play** | `max_reviews` | `int` \| `None` | Total count limit of reviews (sets pagination limit). | Any positive integer, or `None` (for ALL reviews) | `500` |
+| **Google Play** | `sleep_milliseconds` | `int` | Throttling wait delay between fetches. | Any positive integer | `1000` |
+| **HTML / CSS** | `target_urls` | `List[str]` | List of web page URLs to scrape. | List of absolute URLs | `["https://quotes.toscrape.com/"]` |
+| **HTML / CSS** | `container_selector` | `str` | Repeating parent DOM selector class/tag. | Any valid CSS selector | `".quote"` |
+| **HTML / CSS** | `fields_to_scrape` | `Dict` | Map of column names to relative child selectors. | Dict of keys to `{"selector": str, "method": "get" \| "getall"}` | `{"author": {"selector": ".author::text", "method": "get"}}` |
+
+</details>
+
+<details>
+<summary><strong>🔍 Data Profiler Settings</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
+| `directory` | `str` | Target folder containing the source datasets. | Any valid directory path | `"Dataset"` |
+| `file_type` | `str` \| `None` | File format extension filter. Set `None` for automatic detection. | `"csv"`, `"xlsx"`, `"parquet"`, `None` | `None` |
+| `include_keywords` | `List[str]` | Substring filters to selectively profile target files (case-insensitive). | List of strings, `[]` | `["olist", "product"]` |
+| `private` | `bool` \| `Dict` | Dynamic PII privacy masking toggle. Can be a global boolean or a dictionary for selective masking. | `True`, `False`, or Dict of `{file_stem: bool}` | `True` |
+| `export_md` | `str` \| `bool` | Path to export LLM-optimized dense Markdown context. | File path, `False` to skip | `"ai_context.md"` |
+
+</details>
+
+<details>
+<summary><strong>🧹 Data Cleaner Settings</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
+| `file` | `str` | Path to raw source CSV dataset. | Any valid local file path | `"Dataset/file.csv"` |
+| `columns_to_drop` | `List[str]` | Columns to remove from the dataset immediately. | List of column names | `["redundant_id", "junk_col"]` |
+| `duplicate_strategy` | `str` | Row-level deduplication strategy. | `"keep_first"`, `"keep_last"`, `"keep_all"` | `"keep_first"` |
+| `foreign_keys` | `List[str]` | Columns representing IDs/Keys (protected from statistical mutation). | List of column names | `["customer_id", "store_id"]` |
+| `target_variables` | `List[str]` | ML target labels (shielded from imputation or outlier manipulation). | List of column names | `["churn_label"]` |
+| `datetime_conversions` | `Dict` | Datetime parser and parser formats mapping. | Format: `"auto"`, `"mixed"`, or explicit format strings | `{"order_date": "auto"}` |
+| `text_cleaning` | `List[str]` | Columns to perform NLP casing and unicode normalization on. | List of column names | `["comments", "name"]` |
+| `value_mapping` | `Dict` | Specific replacements mapping values per column. | Dict mapping column to replacement dicts | `{"status": {"-": None, "unk": None}}` |
+| `imputation_rules` | `Dict` | Statistical missing value repair strategy. | Strategy: `"simple"` (methods: `"mean"`, `"median"`, `"mode"`), `"advanced"` (methods: `"knn"`, `"mice"`), `"constant"` (requires `"fill_value"`) | `{"age": {"strategy": "simple", "method": "median"}}` |
+| `coercion_rules` | `Dict` | Force mixed values into numeric or datetime formats. | Target: `"numeric"`, `"datetime"`. Optional: `"strip_currency": True` | `{"revenue": {"target": "numeric", "strip_currency": True}}` |
+| `cardinality_rules` | `Dict` | Entropy-based rare label collapsing rules. | Strategy: `"rare_label"`, requires `"min_freq"` | `{"city": {"strategy": "rare_label", "min_freq": 0.01}}` |
+| `transforms` | `Dict` | Mathematical transforms to reduce skewness. | Method: `"log1p"`, `"box_cox"`, `"yeo_johnson"` | `{"price": {"method": "log1p"}}` |
+| `outlier_treatment` | `Dict` | Heuristic clipping of extreme outliers. | Method: `"cap_iqr"`, `"cap_mad"` (requires `"multiplier"`), or `"winsorize"` (requires `"limits"`) | `{"income": {"method": "cap_iqr", "multiplier": 1.5}}` |
+| `leakage_rules` | `Dict` | Dropping look-ahead columns relative to a reference prediction time. | Keys: `"drop_cols"` (list), `"prediction_time_col"` (str) | `{"drop_cols": ["status"], "prediction_time_col": "buy_date"}` |
+| `association_rules` | `Dict` | Pruning redundant associated categorical classes. | Keys: `"threshold"` (float), `"priority"` (list of cols) | `{"threshold": 0.8, "priority": ["cat1", "cat2"]}` |
+| `multicollinearity_threshold` | `float` \| `None` | Spearman correlation threshold above which collinear features are pruned. | Float between `0.0` and `1.0`, or `None` | `0.90` |
+
+</details>
+
+<details>
+<summary><strong>⚙️ ML Pipeline Settings</strong></summary>
+<br>
+
+> Shared parameters applied across all ML task types. These form the base configuration for every `AUTOML_CONFIG` dictionary.
 
 | Key | Type | Description | Available Options | Example |
 |:---|:---|:---|:---|:---|
 | `experiment_name` | `str` | MLflow experiment identifier. | Any string | `"Customer_Segmentation"` |
 | `task_type` | `str` | ML task routing. | `"tabular"`, `"nlp"`, `"time_series"`, `"clustering"` | `"tabular"` |
 | `dataset_path` | `str` | Path to training/source CSV dataset. | Any valid path | `"Dataset/train.csv"` |
-| `target_column` | `List[str]` or `str` | Target column name(s). Always a list for Tabular/Time Series; string for NLP (omit/empty for Unsupervised). | Column name(s) in dataset | `["target"]` |
+| `target_column` | `List[str]` | List of target columns to predict. Set to empty list `[]` (or omit for unsupervised tasks like clustering/topic discovery) to trigger unsupervised/zero-shot routing. | List of column names in dataset, `[]` | `["target"]` |
+| `features` | `List[str]` | Columns to explicitly include as features (empty list uses all valid dataset columns). | List of column names, `[]` | `[]` |
+| `exclude_features` | `List[str]` | Columns to explicitly ignore or exclude from modeling. | List of column names, `[]` | `["customer_id"]` |
 | `presets` | `str` | Model quality training preset. | **Tabular/NLP:** `"extreme"`, `"best"`, `"high"`, `"medium"` <br> **Time Series:** `"best"`, `"high"`, `"medium"` | `"medium"` |
 | `time_limit_seconds` | `int` | Maximum training wall-clock time limit allowed in seconds. | Any positive integer | `300` |
 | `auto_stack` | `bool` | Auto-stack ensemble models for boosted performance. | `True`, `False` | `False` |
@@ -302,10 +366,12 @@ The system configuration is managed via runtime config dictionaries. To make the
 | `fast_dev_run` | `bool` | Quick prototyping mode (subsamples data). | `True`, `False` | `False` |
 | `ai_context` | `str` | Business context string to guide the AI natural language report summary. | Any string, `None` | `"Predicting customer churn based on historical features."` |
 
-</details>
+<br>
+
+> Task-specific overrides — expand the relevant section for your `task_type`:
 
 <details>
-<summary><strong>📋 Tabular Specific Parameters</strong></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;📋 Tabular</summary>
 <br>
 
 | Key | Type | Description | Available Options | Example |
@@ -318,7 +384,7 @@ The system configuration is managed via runtime config dictionaries. To make the
 </details>
 
 <details>
-<summary><strong>📈 Time Series Specific Parameters</strong></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;📈 Time Series</summary>
 <br>
 
 | Key | Type | Description | Available Options | Example |
@@ -335,23 +401,24 @@ The system configuration is managed via runtime config dictionaries. To make the
 </details>
 
 <details>
-<summary><strong>🔮 Clustering Specific Parameters</strong></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;🔮 Clustering</summary>
 <br>
 
 | Key | Type | Description | Available Options | Example |
 |:---|:---|:---|:---|:---|
-| `features` | `List[str]` | Explicit columns for clustering; empty list uses all numeric columns. | List of column names, `[]` | `[]` |
-| `exclude_features` | `List[str]` | Columns to explicitly ignore or exclude from clustering. | List of column names, `[]` | `["customer_id"]` |
 | `n_clusters` | `int` | Fixed number of clusters (K). `None` enables Auto-K sweep. | Any positive integer, `None` | `None` |
 | `clustering_max_k` | `int` | Upper bound for Auto-K optimization sweeps. | Any positive integer | `10` |
 | `clustering_algorithms` | `List[str]` | List of candidate clustering algorithms to evaluate. | `"kmeans"`, `"mbkmeans"`, `"dbscan"`, `"hdbscan"`, `"agglomerative"`, `"spectral"` | `["mbkmeans", "hdbscan", "agglomerative"]` |
 | `clustering_reduction_method` | `str` | Dimension reduction method prior to clustering. | `"pca"`, `"umap"`, `"auto"` | `"auto"` |
 | `clustering_tune_trials` | `int` | Number of Optuna trials to run. `None` disables tuning. | Any positive integer, `None` | `None` |
 
+> [!NOTE]
+> Unsupervised clustering does not use or define a `target_column` in its specific configuration dictionary.
+
 </details>
 
 <details>
-<summary><strong>💬 NLP Specific Parameters</strong></summary>
+<summary>&nbsp;&nbsp;&nbsp;&nbsp;💬 NLP</summary>
 <br>
 
 | Key | Type | Description | Available Options | Example |
@@ -360,6 +427,8 @@ The system configuration is managed via runtime config dictionaries. To make the
 | `candidate_labels` | `List[str]` | Candidate labels for Zero-Shot classification. Only used when `target_column` is empty/omitted. | List of label strings, `None` | `["positive", "negative", "neutral"]` |
 | `nlp_embedding_batch_size` | `int` | Batch size for BGE-M3 embedding extraction (Unsupervised). | Any positive integer | `16` |
 | `nlp_zero_shot_batch_size` | `int` | Batch size for Zero-Shot inference pipeline. | Any positive integer | `8` |
+
+</details>
 
 </details>
 

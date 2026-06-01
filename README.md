@@ -281,13 +281,14 @@ The public repository exposes the interactive tutorial notebooks that consume th
 
 ## 🔧 High-Level Interface Configuration Schema
 
-The system behavior is managed via runtime config dictionaries parsed by the wrapper classes:
+The system configuration is managed via runtime config dictionaries. To make the documentation clean and prevent info overload, click the sections below to expand the specific configuration parameters for each domain:
 
-### AutoMLFactory Schema
+<details open>
+<summary><strong>⚙️ Core / Shared Parameters (Common to all tasks)</strong></summary>
+<br>
 
 | Key | Type | Description | Available Options | Example |
 |:---|:---|:---|:---|:---|
-| **Core / Shared Parameters** | | | | |
 | `experiment_name` | `str` | MLflow experiment identifier. | Any string | `"Customer_Segmentation"` |
 | `task_type` | `str` | ML task routing. | `"tabular"`, `"nlp"`, `"time_series"`, `"clustering"` | `"tabular"` |
 | `dataset_path` | `str` | Path to training/source CSV dataset. | Any valid path | `"Dataset/train.csv"` |
@@ -300,17 +301,28 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `prediction_data_path` | `str` | Path to unseen prediction data for batch inference. | Any valid path, `None` | `"Dataset/unseen.csv"` |
 | `fast_dev_run` | `bool` | Quick prototyping mode (subsamples data). | `True`, `False` | `False` |
 | `ai_context` | `str` | Business context string to guide the AI natural language report summary. | Any string, `None` | `"Predicting customer churn based on historical features."` |
-| **Tabular Specific** | | | | |
+
+</details>
+
+<details>
+<summary><strong>📋 Tabular Specific Parameters</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
 | `problem_types` | `List[str]` | Problem type(s) per target. Leave `[]` for auto-inference. | `"binary"`, `"multiclass"`, `"regression"` | `[]` |
 | `eval_metrics` | `List[str]` | Optimization metric(s). One per target column. | **Binary/Multiclass:** `"f1_macro"`, `"f1_weighted"`, `"precision_macro"`, `"precision_weighted"`, `"recall_macro"`, `"recall_weighted"`, `"accuracy"` <br> **Regression:** `"mae"`, `"mape"`, `"rmse"`, `"mse"`, `"r2"` | `["f1"]` |
 | `multimodal_mode` | `bool` | Enable image/text routing. | `True`, `False` | `False` |
 | `image_column` | `str` | Column name for image paths. | Any column name in dataset | `"image_path"` |
-| **NLP Specific** | | | | |
-| `text_column` | `str` | Column containing raw text. | Column name in dataset | `"review_body"` |
-| `candidate_labels` | `List[str]` | Candidate labels for Zero-Shot classification. Only used when `target_column` is empty/omitted. | List of label strings, `None` | `["positive", "negative", "neutral"]` |
-| `nlp_embedding_batch_size` | `int` | Batch size for BGE-M3 embedding extraction (Unsupervised). | Any positive integer | `16` |
-| `nlp_zero_shot_batch_size` | `int` | Batch size for Zero-Shot inference pipeline. | Any positive integer | `8` |
-| **Time Series Specific** | | | | |
+
+</details>
+
+<details>
+<summary><strong>📈 Time Series Specific Parameters</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
 | `item_id_column` | `str` | Column identifying each individual time series. | Column name in dataset | `"store_id"` |
 | `timestamp_column` | `str` | Column containing date/time values. | Column name in dataset | `"date"` |
 | `prediction_length` | `int` | Forecast horizon (number of steps into the future). | Any positive integer | `14` |
@@ -319,7 +331,15 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `quantile_levels` | `List[float]` | Quantile levels for probabilistic forecasting. | `[0.05, 0.5, 0.95]`, etc. | `[0.05, 0.5, 0.95]` |
 | `static_features_path` | `str` | Path to CSV with item-level metadata. | Any valid path, `None` | `"Dataset/static.csv"` |
 | `eval_metric` | `str` | Time Series evaluation metric. | `"MSE"`, `"RMSE"`, `"MAPE"`, `"MAE"`, `"WQL"` | `"RMSE"` |
-| **Clustering Specific** | | | | |
+
+</details>
+
+<details>
+<summary><strong>🔮 Clustering Specific Parameters</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
 | `features` | `List[str]` | Explicit columns for clustering; empty list uses all numeric columns. | List of column names, `[]` | `[]` |
 | `exclude_features` | `List[str]` | Columns to explicitly ignore or exclude from clustering. | List of column names, `[]` | `["customer_id"]` |
 | `n_clusters` | `int` | Fixed number of clusters (K). `None` enables Auto-K sweep. | Any positive integer, `None` | `None` |
@@ -327,6 +347,21 @@ The system behavior is managed via runtime config dictionaries parsed by the wra
 | `clustering_algorithms` | `List[str]` | List of candidate clustering algorithms to evaluate. | `"kmeans"`, `"mbkmeans"`, `"dbscan"`, `"hdbscan"`, `"agglomerative"`, `"spectral"` | `["mbkmeans", "hdbscan", "agglomerative"]` |
 | `clustering_reduction_method` | `str` | Dimension reduction method prior to clustering. | `"pca"`, `"umap"`, `"auto"` | `"auto"` |
 | `clustering_tune_trials` | `int` | Number of Optuna trials to run. `None` disables tuning. | Any positive integer, `None` | `None` |
+
+</details>
+
+<details>
+<summary><strong>💬 NLP Specific Parameters</strong></summary>
+<br>
+
+| Key | Type | Description | Available Options | Example |
+|:---|:---|:---|:---|:---|
+| `text_column` | `str` | Column containing raw text. | Column name in dataset | `"review_body"` |
+| `candidate_labels` | `List[str]` | Candidate labels for Zero-Shot classification. Only used when `target_column` is empty/omitted. | List of label strings, `None` | `["positive", "negative", "neutral"]` |
+| `nlp_embedding_batch_size` | `int` | Batch size for BGE-M3 embedding extraction (Unsupervised). | Any positive integer | `16` |
+| `nlp_zero_shot_batch_size` | `int` | Batch size for Zero-Shot inference pipeline. | Any positive integer | `8` |
+
+</details>
 
 ---
 

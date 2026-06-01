@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/AutoGluon-v1.5-FF6F00?style=for-the-badge" alt="AutoGluon v1.5">
     <img src="https://img.shields.io/badge/MLflow-Tracking-0194E2?style=for-the-badge&logo=mlflow&logoColor=white" alt="MLflow">
     <img src="https://img.shields.io/badge/BERTopic-NLP-00B2A9?style=for-the-badge" alt="BERTopic">
-    <img src="https://img.shields.io/badge/Validation-2%2C100%2B_Assertions-2ea44f?style=for-the-badge" alt="Validation Assertion Count">
+    <img src="https://img.shields.io/badge/Validation-256_Tests_/_4k+_Lines-2ea44f?style=for-the-badge" alt="Validation Assertion Count">
   </p>
   <br/>
   <img src="Assets/AutoPilot-ML.png" alt="AutoPilot-ML Banner" width="100%">
@@ -29,7 +29,7 @@ The public interface is showcased through interactive Jupyter Notebooks, demonst
 | **📊 Business Analyst** | Interactive HTML dashboards, auto-generated Entity-Relationship diagrams, and plain-language data quality action plans. |
 | **🤖 ML Engineer** | Deterministic, reproducible pipelines with memory-safe O(1) sampling, hardware-aware resource allocation, and exportable model artifacts. |
 
-> **📐 System Capacity:** Powered by a proprietary engine comprising ~21,000 lines of highly optimized code, validated by a rigorous 2,100+ line automated test specification matrix to ensure production stability.
+> **📐 System Capacity:** Powered by a proprietary engine comprising ~30,000 lines of highly optimized code, validated by a rigorous 4,000+ line automated test specification matrix (256 test cases) to ensure production stability.
 
 ---
 
@@ -41,7 +41,7 @@ The statistical profiling engine translates complex numerical metrics into human
 - 🔗 **Auto-detected Entity Relationships** visualized as Mermaid ER diagrams.
 - 📏 **Data Quality Scores** (0–100) based on completeness, uniqueness, and semantic type consistency.
 - 🎯 **Prioritized Action Plans** classifying quality warnings by severity (CRITICAL / WARNING / INFO) per column.
-- 🧩 **Semantic Type Inference** distinguishing ZIP codes, hash-IDs, coordinates, and ordinals from generic numeric types.
+- 🧩 **Semantic Type Inference** auto-detecting 18 semantic types (including email, IP, URL, phone, MAC, UUID, hash, binary, count, temporal, coordinate, continuous, primary/foreign key candidates).
 
 ### 📊 Premium Visual Dashboards
 Each module generates a dark-themed, responsive HTML dashboard embedded directly inside Jupyter Notebooks or saved as standalone HTML assets:
@@ -132,72 +132,71 @@ When the pipeline runs, it generates structured artifact directories within the 
 The web scraping system manages async, isolated data ingestion pipelines using a **Dual-Mode Engine Architecture**:
 
 ### 🤖 Google Play Reviews Scraper
-- **Anti-Blocking System**: Smart connection handling that automatically retries if the app store temporarily limits requests, ensuring data collection is never interrupted by network issues.
-- **Human-like Scraping Behavior**: Automatically adds natural, varied pauses between requests to mimic human browsing behavior, preventing the scraper from being flagged or blocked.
-- **Unrestricted Data Ingestion**: Able to gather all available feedback without limits, allowing the business to capture a complete picture of customer reviews.
-- **Clean Date and Text Formatting**: Automatically cleans up line breaks and messy timestamps into structured, readable tables. This ensures the exportedS files open perfectly in standard software (like Excel) and are ready for immediate team use.
+- **Robust Integration**: Utilizes the specialized `google-play-scraper` library, incorporating intelligent retry logic if the store limits requests to guarantee consistent and reliable data collection.
+- **Human-like Scraping Patterns**: Dynamically injects randomized delays (jitter) between requests to emulate human browsing and naturally bypass bot detection.
+- **Fault-Tolerant Checkpointing**: Collects user reviews page-by-page and writes incremental checkpoints to disk, protecting the pipeline against network drops or mid-run interruptions.
+- **Automated Text Normalization**: Automatically normalizes messy timestamps and text encodings into structured tables, preparing clean datasets for immediate analysis.
 
 ### 🕷️ General HTML Website Scraper
-- **Crash-Free Background Isolation**: Runs web scraping tasks in the background without affecting or crashing the main application window.
-- **Smart Bot Bypass**: Automatically navigates websites with modern security walls and check-in challenges without manual effort.
-- **Targeted Data Extraction**: Easily locates and pulls specific text fields, lists, and images from different layouts on any target website.
+- **Background Subprocess Isolation**: Runs scraping jobs in dedicated background processes to completely prevent event loop conflicts and keep interactive environments like Jupyter notebooks highly responsive.
+- **Stealth Bypass Capabilities**: Integrates `scrapling`'s stealth session engine to seamlessly handle security challenges (like Cloudflare/Turnstile) and adapt to dynamic layout modifications.
+- **Customizable Targeted Extraction**: Uses precision CSS selectors to automatically route, parse, and map single text fields, custom lists, or structured arrays based on configuration.
 
 ### Shared Pipeline Safety
-- **Auto-Saving Safety Checkpoints**: Saves scraped data continuously during the run. If the computer loses power or the process is stopped midway, no data is lost.
-- **Data Format Consistency**: Ensures complex data lists are preserved in their correct structures without corruption.
-- **Real-Time Progress Dashboard**: Provides a beautiful visual tracking dashboard that displays status updates, logs, and a clean live preview of the gathered data.
+- **Memory-Safe Local Archival**: Continuously dumps extracted records directly to disk to prevent memory footprint bloat.
+- **Structured Data Reconstruction**: Automatically parses and restores complex nested list structures (via list evaluation) during data reload, maintaining schema consistency.
+- **Interactive Execution Dashboard**: Visualizes execution logs, scrape speeds, and dataset previews in a premium dark-themed HTML interface.
 
 ---
 
 ## 🔍 The Data Profiler — Schema & Relationship Discovery
 
 The statistical profiling module analyzes data schemas beyond simple summaries:
-- **Semantic Auto-Detection**: Maps fields into 9 semantic types (such as `coordinate_like`, `hash_like`, `identifier_like`) to handle IDs and keys correctly.
-- **Quality Scorecard**: Combines completeness, uniqueness, and consistency into a single weighted score.
-- **Dirty Placeholder Identification**: Finds string null-tokens like `"n/a"`, `"?"`, or `"unknown"`.
-- **Multicollinearity Checks**: Scrapes high-correlation feature pairs using memory-safe bounded sampling.
-- **Multi-File Entity Relations**: When run across multiple datasets, it auto-detects shared keys and outputs a complete Mermaid Entity-Relationship diagram.
+- **Intelligent Semantic Detection**: Auto-detects **18 distinct semantic types** (such as emails, IP addresses, coordinates, phone numbers, and keys) to classify fields correctly and shield them from invalid mathematical transformations.
+- **Comprehensive Quality Scorecard**: Computes a single weighted quality score (0–100) combining data completeness, uniqueness, and format consistency.
+- **Placeholder Extraction**: Automatically flags hidden missing-value placeholders (like `"n/a"`, `"?"`, or `"unknown"`).
+- **Multicollinearity Checks**: Evaluates high-correlation feature pairs using memory-safe bounded sampling.
+- **Relational Map Generation (ERD)**: Spans multiple datasets to automatically identify primary/foreign key connections (using smart name normalization and value-overlap verification), handles multi-language dates (English, Indonesian, Italian, German, Dutch), and outputs a dynamic Mermaid Entity-Relationship diagram.
 
 ---
 
-## 🧹 The Data Cleaner — 12-Step Deterministic Pipeline
+## 🧹 The Data Cleaner — 14-Step Deterministic Pipeline
 
 The data cleaning pipeline executes a rigid, sequential set of transformations to prepare raw data for downstream modeling:
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│ Step  1: Drop Columns ──→ Remove high-missingness/redundant     │
-│ Step  2: Deduplicate ──→ Enforce row uniqueness (first/last)    │
-│ Step 2b: Leakage Handling ──→ Prune temporal look-ahead cols    │
-│ Step  3: Datetime Conversions ──→ Parse strings to datetime64   │
-│ Step  4: Coercion Cleansing ──→ Force mixed-type to numeric     │
-│ Step 4b: Value Mapping ──→ Replace dirty tokens / null aliases  │
-│ Step  5: Text Cleaning ──→ Unicode normalize, strip, lowercase  │
-│ Step  6: Imputation ──→ Median/Mode, KNN, or MICE repair        │
-│ Step  7: Cardinality Grouping ──→ Entropy-based rare-label      │
-│ Step  8: Transforms ──→ Log1p, Box-Cox, Yeo-Johnson             │
-│ Step  9: Outlier Treatment ──→ IQR / MAD / Winsorization        │
-│ Step 10: Categorical Association ──→ Prune redundant classes    │
-│ Step 11: Multicollinearity ──→ Spearman ρ pairwise pruning      │
-│ Step 12: Memory Optimization ──→ Downcast dtypes to save RAM    │
-└─────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│ Step  1: Drop Columns ──→ Remove high-missingness/redundant           │
+│ Step  2: Deduplicate ──→ Enforce row uniqueness (first/last)          │
+│ Step 2b: Leakage Handling ──→ Prune temporal look-ahead cols          │
+│ Step  3: Datetime Conversions ──→ Parse strings to datetime64         │
+│ Step  4: Coercion Cleansing ──→ Force mixed-type to numeric           │
+│ Step 4b: Value Mapping ──→ Replace dirty tokens / null aliases        │
+│ Step  5: Text Cleaning ──→ Unicode normalize, strip, lowercase        │
+│ Step  6: Imputation ──→ Median/Mode, KNN, or MICE repair              │
+│ Step  7: Cardinality Grouping ──→ Entropy-based rare-label            │
+│ Step  8: Transforms ──→ Log1p, Box-Cox, Yeo-Johnson                   │
+│ Step  9: Outlier Treatment ──→ IQR / MAD / Winsorization              │
+│ Step 10: Resolve Categorical Association ──→ Prune redundant classes  │
+│ Step 11: Resolve Multicollinearity ──→ Spearman ρ pairwise pruning    │
+│ Step 12: Memory Optimization ──→ Downcast dtypes to save RAM          │
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
-### Class Imbalance & Imputation Controls
-- **Class Imbalance Resampling**: Integrates **SMOTE** (Synthetic Minority Over-sampling Technique) to automatically balance skewed class distributions during the preprocessing stage.
-- **Multivariate Imputation**: Employs **KNN Imputation** and **MICE** (Multiple Imputation by Chained Equations) to repair complex missingness patterns.
+### Class Imbalance & Smart Imputation
+- **Target Imbalance Controls**: Automatically identifies skewed target distributions, flagging imbalance risks and enabling post-train decision threshold calibration to balance precision and recall.
+- **Advanced Multivariate Imputation**: Combines KNN (K-Nearest Neighbors) and MICE (Multiple Imputation by Chained Equations) algorithms to handle complex missing-value patterns.
+- **O(1) Memory Safeguards**: Automatically degrades advanced imputers to simple baselines if the dataset size risks triggering Out-of-Memory (OOM) errors, logging the event for debugging. Target variables and relational foreign keys are strictly shielded from modification.
 
-### Advanced Imputation Modes
+### Adaptive Imputation Strategy
 
-The cleaner automatically selects or falls back between three imputation methods depending on the column type and memory footprint:
+The cleaning engine dynamically chooses or falls back between three imputation tiers based on data shape and system memory:
 
-| Imputation Level | Method | Best Use Case |
+| Imputation Level | Algorithm / Method | Best Use Case |
 |---|---|---|
-| **Simple Imputation** | Mean, Median, Mode, or Constant values | Fast baseline correction |
-| **KNN Imputation** | K-Nearest Neighbors regression imputer | Locally correlated numerical features |
-| **MICE Imputation** | Multiple Imputation by Chained Equations | Highly correlated multi-variable missingness |
-
-If the data footprint exceeds hardware bounds, advanced imputers automatically degrade to simple statistics, recording an audit event to prevent OOM errors.
+| **Simple Imputation** | Mean, Median, Mode, or Constant values | Fast, low-overhead baseline correction |
+| **KNN Imputation** | K-Nearest Neighbors regression | Locally correlated numerical features |
+| **MICE Imputation** | Multiple Imputation by Chained Equations | Complex, highly correlated multi-variable missingness |
 
 ---
 
@@ -236,20 +235,19 @@ The proprietary ML Engine is accessed via the high-level `AutoMLFactory` interfa
 
 ## 🧪 Engine Verification & Integrity Matrix
 
-The underlying pipeline engines are structurally validated by a rigorous, 2,100+ line automated test specification matrix. This validation layer ensures stability, enforces API contracts, and prevents regressions across edge cases.
+To ensure production-grade stability, the core engines are validated by a rigorous test suite of **256 automated test cases** (spanning 4,000+ lines in `engine_test.py`). This validation layer secures API contracts and guarantees pipeline reliability.
 
-The system's integrity verification covers:
+The integrity verification covers the following test modules:
 
-| Verification Suite | Validated Functionality |
-|---|---|
-| **Architectural Boundaries** | Verifies O(1) memory shields and proactive sampling limit thresholds. |
-| **Data Profiler Integrity** | Validates semantic type inference, Mermaid ERD output, and dashboard serialization. |
-| **Cleaning Pipeline Verification** | Enforces chronological execution order, target variable shielding, and coercion correctness. |
-| **Robustness to Dirty Inputs** | Validates handling of all-null columns, boolean masquerades, and infinite values. |
-| **Winsorization & Imputation** | Tests quantile clipping precision, KNN/MICE fallback bounds, and infinite-value neutralization. |
-| **Scraper Subprocess Sandbox** | Checks async execution, Cloudflare bypass session handling, and timing jitter. |
-| **Tabular & Time Series AutoML** | Validates AutoGluon model routing, time-series splitting, and MLflow logging. |
-| **NLP Pipeline Verification** | Validates zero-shot scoring arrays, topic probability thresholds, and Gemini fallback routines. |
+| Verification Suite | Target Engine Class / Test Scope | Validated Pipeline Functionality |
+|---|---|---|
+| **Web Scraper Suite** | `TestDataScraperEngine` | Process-isolated async crawling, sequential Play Store scraping, bot bypass, and format consistency. |
+| **Data Profiler Suite** | `TestDataProfilerEngine` | 18 semantic type inferences, multi-language date translations, key naming normalization, and Mermaid ERD rendering. |
+| **Deterministic Cleaner Suite** | `TestDataCleanerEngine` | 14-step sequential cleaning order, target shielding, KNN/MICE imputation fallbacks, and memory footprint scaling. |
+| **Tabular AutoML Suite** | `TestMLTabularEngine` | Supervised regression & classification, autoregressive multilabel target chaining, and threshold optimization. |
+| **Time Series Suite** | `TestMLTimeSeriesEngine` | Quantile forecast intervals, walk-forward validation splits, known covariates, and static metadata features. |
+| **Clustering Discovery Suite** | `TestMLClusteringEngine` | Auto-K sweeps, silhouette/Davies-Bouldin metrics, Optuna hyperparameter tuning, and KNN batch inference proxies. |
+| **NLP Engine Suite** | `TestMLNLPEngine` | Supervised text classification, Zero-Shot routing arrays, unsupervised BERTopic modeling, and Gemini fallback API routines. |
 
 ---
 

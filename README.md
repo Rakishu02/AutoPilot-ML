@@ -43,8 +43,8 @@ The statistical profiling engine translates complex numerical metrics into human
 - 🎯 **Prioritized Action Plans** classifying quality warnings by severity (CRITICAL / WARNING / INFO) per column.
 - 🧩 **Semantic Type Inference** auto-detecting 18 semantic types (including email, IP, URL, phone, MAC, UUID, hash, binary, count, temporal, coordinate, continuous, primary/foreign key candidates).
 
-### 📊 Premium Visual Dashboards
-Each module generates a dark-themed, responsive HTML dashboard embedded directly inside Jupyter Notebooks or saved as standalone HTML assets:
+### 📊 Premium Visual Dashboards & Web App
+The profiler has been upgraded to a local **Flask Web Dashboard** with a user-friendly UI. Each module generates a dark-themed, responsive HTML dashboard embedded directly inside Jupyter Notebooks, saved as standalone HTML assets, or served directly via the web dashboard:
 - Model performance leaderboards with metric card visualizations.
 - TreeSHAP feature importance plots and feature importance bar charts.
 - Binary classification decision threshold calibration curves.
@@ -83,6 +83,22 @@ The execution steps feed into one another sequentially, though each module can b
   → CSV/JSONL    → Mermaid ERD                     → HTML Dashboard
                  → LLM Context                     → MLflow Artifacts
 ```
+
+---
+
+## 🔌 Data Ingestion & Connectors
+
+AutoPilot-ML features a universal database connector module (`connectors.py`) that supports secure, ephemeral connections to **25+ SQL/NoSQL databases and cloud storage platforms**. You can profile and ingest datasets from these sources directly in the web dashboard without writing credentials to disk:
+
+| Connector Category | Supported Databases & Cloud Storage |
+|:---|:---|
+| **SQL Databases** | PostgreSQL, MySQL, SQLite, Oracle, SQL Server, MariaDB, CockroachDB |
+| **Cloud Data Warehouses** | Snowflake, Google BigQuery, Databricks |
+| **NoSQL Databases** | MongoDB, Elasticsearch, Cassandra |
+| **Cloud Storage** | AWS S3, Google Cloud Storage (GCS), Azure Blob Storage |
+| **Flat Files & APIs** | CSV, Parquet, Excel (with magic byte validation), REST APIs |
+
+All connections are ephemeral and run in-memory, ensuring credentials are never stored on disk.
 
 ---
 
